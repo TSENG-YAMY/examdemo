@@ -1,0 +1,637 @@
+/* 基礎樣式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #667eea;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+/* 畫面切換 */
+.screen {
+    display: none;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 測驗設置頁面 */
+.setup-panel {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.setup-group {
+    margin-bottom: 25px;
+}
+
+.setup-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.setup-group input[type="number"],
+.setup-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.setup-group input[type="number"]:focus,
+.setup-group select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.range-inputs,
+.count-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.range-inputs input {
+    flex: 1;
+}
+
+.count-inputs input {
+    flex: 2;
+}
+
+.count-inputs select {
+    flex: 1;
+}
+
+.setup-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.setup-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+/* 按鈕樣式 */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #333;
+}
+
+.btn-warning:hover {
+    background: #e0a800;
+}
+
+/* 權重題目預覽 */
+.weighted-questions {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+}
+
+.weighted-questions h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.weighted-questions.hidden {
+    display: none;
+}
+
+.weighted-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 5px;
+    border-left: 3px solid #ffc107;
+}
+
+.weighted-item .weight-badge {
+    display: inline-block;
+    background: #ffc107;
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+/* 測驗頁面 */
+.test-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.test-info,
+.test-timer {
+    display: flex;
+    gap: 20px;
+    font-weight: 600;
+}
+
+.test-timer {
+    color: #dc3545;
+}
+
+/* 題號導航 */
+.question-navigation {
+    margin-top: 20px;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #e0e0e0;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.nav-btn:hover {
+    border-color: #667eea;
+    transform: scale(1.1);
+}
+
+.nav-btn.current {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.nav-btn.answered {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+/* 題目容器 */
+.question-container {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.question-type {
+    display: inline-block;
+    padding: 5px 15px;
+    background: #667eea;
+    color: white;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.question-text {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 500;
+}
+
+.question-image {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.question-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.question-image.hidden {
+    display: none;
+}
+
+/* 選項樣式 */
+.options {
+    margin-bottom: 20px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.option input[type="radio"],
+.option input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.option-text {
+    flex: 1;
+    font-size: 16px;
+}
+
+.option.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 答題反饋 */
+.feedback {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feedback.hidden {
+    display: none;
+}
+
+.feedback.correct {
+    background: #d4edda;
+    border-left: 4px solid #28a745;
+}
+
+.feedback.incorrect {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+.feedback-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.feedback-header .icon {
+    font-size: 30px;
+    margin-right: 10px;
+}
+
+.feedback.correct .feedback-header {
+    color: #28a745;
+}
+
+.feedback.incorrect .feedback-header {
+    color: #dc3545;
+}
+
+.answer-comparison {
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+}
+
+.answer-comparison p {
+    margin-bottom: 8px;
+}
+
+.answer-comparison strong {
+    font-weight: 700;
+}
+
+.explanation {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.explanation h4 {
+    margin-bottom: 10px;
+    color: #667eea;
+}
+
+/* 測驗控制 */
+.question-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.test-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* 測驗結果頁面 */
+.result-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.score-circle {
+    position: relative;
+}
+
+.score-circle circle {
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+.result-stats {
+    flex: 1;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: #555;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #667eea;
+}
+
+/* 錯題複習 */
+.wrong-answers {
+    margin-bottom: 30px;
+}
+
+.wrong-answers h2 {
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.wrong-item {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8d7da;
+    border-radius: 5px;
+    border-left: 4px solid #dc3545;
+}
+
+.wrong-item .question-text {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.wrong-item .options {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.wrong-item .option {
+    margin-bottom: 8px;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+}
+
+/* Modal 視窗 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+#modalBody {
+    margin-top: 20px;
+}
+
+.preview-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+}
+
+.preview-item h4 {
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .result-summary {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .test-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    .question-text {
+        font-size: 16px;
+    }
+
+    .option-text {
+        font-size: 14px;
+    }
+}
+
+/* 隱藏類別 */
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITS 人工智慧核心能力模擬試題復習系統</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 測驗設置頁面 -->
+    <div id="setupScreen" class="screen active">
+        <div class="container">
+            <h1>ITS 人工智慧核心能力模擬試題復習系統</h1>
+
+            <div class="setup-panel">
+                <div class="setup-group">
+                    <label for="rangeStart">題號範圍:</label>
+                    <div class="range-inputs">
+                        <input type="number" id="rangeStart" min="1" value="1">
+                        <span>到</span>
+                        <input type="number" id="rangeEnd" min="1" value="100">
+                    </div>
+                </div>
+
+                <div class="setup-group">
+                    <label for="questionCount">測驗題數:</label>
+                    <div class="count-inputs">
+                        <input type="number" id="questionCount" min="1" max="200" value="20">
+                        <select id="quickSelect">
+                            <option value="">快速選擇</option>
+                            <option value="1">1題</option>
+                            <option value="2">2題</option>
+                            <option value="3">3題</option>
+                            <option value="4">4題</option>
+                            <option value="5">5題</option>
+                            <option value="10">10題</option>
+                            <option value="20">20題</option>
+                            <option value="30">30題</option>
+                            <option value="50">50題</option>
+                            <option value="100">100題</option>
+                            <option value="150">150題</option>
+                            <option value="200">200題</option>
+                            <option value="all">全部</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setup-group">
+                    <label for="answerOrder">答案順序:</label>
+                    <select id="answerOrder">
+                        <option value="original">原始題庫順序</option>
+                        <option value="random">隨機順序</option>
+                    </select>
+                </div>
+
+                <div class="setup-group">
+                    <label for="testTime">測驗時間 (分鐘):</label>
+                    <input type="number" id="testTime" min="1" max="999" value="60">
+                </div>
+
+                <div class="setup-group">
+                    <label>
+                        <input type="checkbox" id="soundEnabled" checked>
+                        開啟音效
+                    </label>
+                </div>
+
+                <div class="setup-actions">
+                    <button id="startTest" class="btn btn-primary">開始測驗</button>
+                    <button id="previewQuestions" class="btn btn-secondary">預覽題庫</button>
+                    <button id="downloadQuestions" class="btn btn-secondary">下載題庫</button>
+                </div>
+
+                <div id="weightedQuestions" class="weighted-questions hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 測驗進行頁面 -->
+    <div id="testScreen" class="screen">
+        <div class="container">
+            <div class="test-header">
+                <div class="test-info">
+                    <span id="questionNumber">第 1/20 題</span>
+                    <span id="progress">5%</span>
+                </div>
+                <div class="test-timer">
+                    <span id="timerLabel">剩餘時間:</span>
+                    <span id="timer">60:00</span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-type" id="questionType">單選題</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="question-image hidden" id="questionImage">
+                    <img src="" alt="題目圖片">
+                </div>
+                <div class="options" id="options"></div>
+
+                <div class="question-actions">
+                    <button id="submitAnswer" class="btn btn-success">提交答案</button>
+                    <button id="nextQuestion" class="btn btn-primary hidden">繼續下一題</button>
+                </div>
+
+                <div id="feedback" class="feedback hidden"></div>
+            </div>
+
+            <div class="question-navigation">
+                <div id="questionNav" class="nav-buttons"></div>
+            </div>
+
+            <div class="test-controls">
+                <button id="submitTest" class="btn btn-warning">立即交卷</button>
+                <button id="restartSetup" class="btn btn-secondary">重新開始</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 測驗結果頁面 -->
+    <div id="resultScreen" class="screen">
+        <div class="container">
+            <h1>測驗結果</h1>
+
+            <div class="result-summary">
+                <div class="score-circle">
+                    <svg width="200" height="200">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#e0e0e0" stroke-width="20"/>
+                        <circle id="scoreCircle" cx="100" cy="100" r="90" fill="none" stroke="#4CAF50" stroke-width="20"
+                                stroke-dasharray="565.48" stroke-dashoffset="565.48" transform="rotate(-90 100 100)"/>
+                        <text x="100" y="100" text-anchor="middle" dy=".3em" font-size="48" id="scoreText">0%</text>
+                    </svg>
+                </div>
+
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">得分:</span>
+                        <span class="stat-value" id="scoreValue">0/20</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">正確率:</span>
+                        <span class="stat-value" id="accuracyValue">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">作答時間:</span>
+                        <span class="stat-value" id="timeValue">00:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wrongAnswers" class="wrong-answers"></div>
+
+            <div class="result-actions">
+                <button id="retakeTest" class="btn btn-primary">再考一次</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 視窗 -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
