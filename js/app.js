@@ -1,5 +1,5 @@
 // ITS 人工智慧核心能力模擬試題復習系統
-(function() {
+(function () {
     'use strict';
 
     // 全局變數
@@ -89,10 +89,33 @@
             questions = await response.json();
 
             // 確保每個題目都有 weight 屬性
-            questions = questions.map(q => ({
-                ...q,
-                weight: q.weight || 1
-            }));
+            // 正規化題目資料：補 weight，並將答案從字母(A/B/...)轉為 1-based 數字索引
+            questions = questions.map(q => {
+                const normalized = {
+                    ...q,
+                    weight: q.weight || 1
+                };
+
+                // normalize answer: 支援數字或字母形式 (如 "A","B"), 最後轉為數字 1-based
+                if (Array.isArray(normalized.answer)) {
+                    normalized.answer = normalized.answer.map(a => {
+                        if (typeof a === 'number') return a;
+                        if (typeof a === 'string') {
+                            const trimmed = a.trim();
+                            // 若為單一字母 A~Z
+                            if (/^[A-Za-z]$/.test(trimmed)) {
+                                return trimmed.toUpperCase().charCodeAt(0) - 65 + 1; // A -> 1
+                            }
+                            // 若為數字字串
+                            const n = parseInt(trimmed, 10);
+                            if (!isNaN(n)) return n;
+                        }
+                        return a; // fallback 保持原樣
+                    }).filter(x => x !== undefined && x !== null);
+                }
+
+                return normalized;
+            });
 
             elements.rangeEnd.value = questions.length;
             elements.rangeEnd.max = questions.length;
@@ -129,7 +152,7 @@
     // 設置事件監聽器
     function setupEventListeners() {
         // 快速選擇題數
-        elements.quickSelect.addEventListener('change', function() {
+        elements.quickSelect.addEventListener('change', function () {
             if (this.value === 'all') {
                 elements.questionCount.value = questions.length;
             } else if (this.value) {
@@ -138,7 +161,7 @@
         });
 
         // 音效開關
-        elements.soundEnabled.addEventListener('change', function() {
+        elements.soundEnabled.addEventListener('change', function () {
             soundEnabled = this.checked;
         });
 
@@ -180,7 +203,7 @@
 
         // Modal 關閉
         document.querySelector('.modal-close').addEventListener('click', closeModal);
-        elements.modal.addEventListener('click', function(e) {
+        elements.modal.addEventListener('click', function (e) {
             if (e.target === this) {
                 closeModal();
             }
@@ -334,7 +357,7 @@
         elements.questionNav.innerHTML = html;
 
         // 題號導航點擊事件
-        elements.questionNav.addEventListener('click', function(e) {
+        elements.questionNav.addEventListener('click', function (e) {
             if (e.target.classList.contains('nav-btn')) {
                 const index = parseInt(e.target.dataset.index);
                 showQuestion(index);
@@ -386,10 +409,11 @@
 
         options.forEach((option, i) => {
             const optionId = `option-${i}`;
+            const label = String.fromCharCode(65 + i); // A, B, C...
             optionsHTML += `
                 <label class="option" for="${optionId}">
                     <input type="${inputType}" id="${optionId}" name="answer" value="${i}">
-                    <span class="option-text">${i + 1}. ${option}</span>
+                    <span class="option-text">${label}. ${option}</span>
                 </label>
             `;
         });
@@ -487,8 +511,18 @@
                 </div>
             `;
         } else {
-            const userAnswerText = userAnswer.map(i => options[i - 1] || '未知').join(', ');
-            const correctAnswerText = correctAnswer.map(i => question.options[i - 1] || '未知').join(', ');
+            // 使用原始選項(question.options)確保在亂序選項時依舊正確對應
+            const userAnswerText = userAnswer.map(i => {
+                const label = String.fromCharCode(64 + i); // 1->A
+                const text = question.options[i - 1] || '未知';
+                return `${label}. ${text}`;
+            }).join(', ');
+
+            const correctAnswerText = correctAnswer.map(i => {
+                const label = String.fromCharCode(64 + i);
+                const text = question.options[i - 1] || '未知';
+                return `${label}. ${text}`;
+            }).join(', ');
 
             feedbackHTML = `
                 <div class="feedback-header">
@@ -593,11 +627,12 @@
         showScreen('resultScreen');
     }
 
-    // 顯示錯題
+    // 顯示錯題（含未作答）
     function showWrongAnswers() {
+        // 將未作答或答錯的題目都視為錯題複習項
         const wrongItems = userAnswers
             .map((answer, index) => ({ answer, index }))
-            .filter(item => item.answer && !item.answer.isCorrect);
+            .filter(item => item.answer === null || (item.answer && !item.answer.isCorrect));
 
         if (wrongItems.length === 0) {
             elements.wrongAnswers.innerHTML = '<h2 style="color: #28a745;">恭喜!全部答對!</h2>';
@@ -608,11 +643,24 @@
 
         wrongItems.forEach(item => {
             const question = testQuestions[item.index];
-            const answer = item.answer;
+            const answer = item.answer; // 可能為 null (未作答)
             const options = answerOrderRandom ? question.shuffledOptions : question.options;
 
-            const userAnswerText = answer.mappedAnswer.map(i => question.options[i - 1] || '未知').join(', ');
-            const correctAnswerText = question.answer.map(i => question.options[i - 1] || '未知').join(', ');
+            // 使用者答案文字（用原始 question.options 來對應正確答案）
+            let userAnswerText = '未作答';
+            if (answer && Array.isArray(answer.mappedAnswer) && answer.mappedAnswer.length > 0) {
+                userAnswerText = answer.mappedAnswer.map(i => {
+                    const label = String.fromCharCode(64 + i);
+                    const text = question.options[i - 1] || '未知';
+                    return `${label}. ${text}`;
+                }).join(', ');
+            }
+
+            const correctAnswerText = question.answer.map(i => {
+                const label = String.fromCharCode(64 + i);
+                const text = question.options[i - 1] || '未知';
+                return `${label}. ${text}`;
+            }).join(', ');
 
             html += `
                 <div class="wrong-item">
@@ -621,7 +669,7 @@
                     </div>
                     ${question.image ? `<img src="${question.image}" style="max-width: 100%; margin: 10px 0; border-radius: 5px;" alt="題目圖片">` : ''}
                     <div class="options">
-                        ${options.map((opt, i) => `<div>${i + 1}. ${opt}</div>`).join('')}
+                        ${options.map((opt, i) => `<div>${String.fromCharCode(65 + i)}. ${opt}</div>`).join('')}
                     </div>
                     <div class="answer-comparison">
                         <p><strong>你的答案:</strong> ${userAnswerText}</p>
@@ -652,9 +700,9 @@
                     <p><strong>題目:</strong> ${q.question}</p>
                     <p><strong>選項:</strong></p>
                     <ol>
-                        ${q.options.map(opt => `<li>${opt}</li>`).join('')}
+                        ${q.options.map((opt, idx) => `<li>${String.fromCharCode(65 + idx)}. ${opt}</li>`).join('')}
                     </ol>
-                    <p><strong>正確答案:</strong> ${q.answer.map(a => q.options[a - 1]).join(', ')}</p>
+                    <p><strong>正確答案:</strong> ${q.answer.map(a => `${String.fromCharCode(64 + a)}. ${q.options[a - 1]}`).join(', ')}</p>
                     ${q.explanation ? `<p><strong>解析:</strong> ${q.explanation}</p>` : ''}
                 </div>
             `;

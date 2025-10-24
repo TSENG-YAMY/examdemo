@@ -71,7 +71,7 @@ http-server
   "id": 1,
   "type": "single",
   "question": "題目內容",
-  "options": ["選項1", "選項2", "選項3", "選項4"],
+  "options": ["選項A", "選項B", "選項C", "選項D"],
   "answer": [1],
   "weight": 2,
   "image": null,
