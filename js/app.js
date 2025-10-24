@@ -1,4 +1,4 @@
-// ITS 人工智慧核心能力模擬試題復習系統
+// ITS POWER BI 人工智慧核心能力模擬試題復習系統
 (function () {
     'use strict';
 
