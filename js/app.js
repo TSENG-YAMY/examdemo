@@ -700,7 +700,7 @@
                     <p><strong>題目:</strong> ${q.question}</p>
                     <p><strong>選項:</strong></p>
                     <ol>
-                        ${q.options.map((opt, idx) => `<li>${String.fromCharCode(65 + idx)}. ${opt}</li>`).join('')}
+                        ${q.options.map((opt, idx) => `<li>${opt}</li>`).join('')}
                     </ol>
                     <p><strong>正確答案:</strong> ${q.answer.map(a => `${String.fromCharCode(64 + a)}. ${q.options[a - 1]}`).join(', ')}</p>
                     ${q.explanation ? `<p><strong>解析:</strong> ${q.explanation}</p>` : ''}

@@ -113,14 +113,14 @@ h1 {
 
 .setup-actions {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 30px;
+    flex-direction: row;
+    gap: 23px;
+    margin-top: 20px;
 }
 
 /* 按鈕樣式 */
 .btn {
-    padding: 12px 24px;
+    padding: 12px 60px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
@@ -136,7 +136,7 @@ h1 {
 }
 
 .btn-primary {
-    background: #667eea;
+    background: #647dec;
     color: white;
 }
 
@@ -145,7 +145,7 @@ h1 {
 }
 
 .btn-secondary {
-    background: #6c757d;
+    background: #e49336;
     color: white;
 }
 
